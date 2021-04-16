@@ -7,24 +7,44 @@ var map = new mapboxgl.Map({
 });
 
 
-window.onload = () => {
+window.onload = async () => {
+    let location = false;
     let tracker;
     if ('geolocation' in navigator) {
         navigator.geolocation.getCurrentPosition((p) => {
             console.log(p.coords);
-
+            location = true;
             map.setCenter({ lon: p.coords.longitude, lat: p.coords.latitude });
         });
+    }
 
-        // tracker = navigator.geolocation.watchPosition((p) => {
-        //     console.log(p.coords);
-        //     map.setCenter({ lon: p.coords.longitude, lat: p.coords.latitude });
-        // });
-
-    } else {
+    if (!location) {
         // geolocation not available
+        if ('geolocation' in navigator) {
+            let allowGeo = await navigator.permissions.query({ name: 'geolocation' });
+            if (allowGeo.state == "prompt") {
+                allowGeo.onchange = (e) => {
+                    if (e.target.state == "granted") {
+
+                        //console.log(e);
+                        navigator.geolocation.getCurrentPosition((p) => {
+                            console.log(p.coords);
+                            location = true;
+                            map.setCenter({ lon: p.coords.longitude, lat: p.coords.latitude });
+                        });
+
+                    }
+                };
+            }
+        }
+        getServerGeo();
     };
-
-    //navigator.geolocation.clearWatch(tracker);
-
 };
+
+let getServerGeo = async function () {
+    var loc = await fetch("/geo");
+    var jData = await loc.json();
+
+    console.log(jData);
+    map.setCenter({ lon: jData.longitude, lat: jData.latitude });
+}
