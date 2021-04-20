@@ -7,7 +7,7 @@ var map = new mapboxgl.Map({
 });
 
 let getHydrants = async () => {
-    let req = await fetch("/hydrants");
+    let req = await fetch("/api/hydrants");
     let data = await req.text();
     let parsed = new window.DOMParser().parseFromString(data, 'text/xml');
 
@@ -69,7 +69,7 @@ window.onload = async () => {
 };
 
 let getServerGeo = async function () {
-    var loc = await fetch("/geo");
+    var loc = await fetch("/api/geo");
     var jData = await loc.json();
 
     console.log(jData);
