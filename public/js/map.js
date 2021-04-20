@@ -6,8 +6,35 @@ var map = new mapboxgl.Map({
     zoom: 12 // starting zoom
 });
 
+let getHydrants = async () => {
+    let req = await fetch("/hydrants");
+    let data = await req.text();
+    let parsed = new window.DOMParser().parseFromString(data, 'text/xml');
+
+    let hydrants = parsed.querySelectorAll("GEOM");
+
+    //console.log(hydrants.length);
+    hydrants.forEach((el) => {
+        let loc = el.innerHTML;
+        // POINT (-75.738712 45.500612)
+        loc = loc.substring(7, loc.length - 1).split(' ');
+        //console.log(loc);
+
+        var marker = new mapboxgl.Marker()
+            .setLngLat([loc[0], loc[1]])
+            .addTo(map);
+    });
+
+
+    // 
+    //     console.log(el.innerHTML);
+    // });
+
+
+}
 
 window.onload = async () => {
+    getHydrants();
     let location = false;
     let tracker;
     if ('geolocation' in navigator) {
