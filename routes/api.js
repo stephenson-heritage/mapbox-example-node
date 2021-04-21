@@ -67,7 +67,7 @@ router.get('/hydrantsx', async (req, res) => {
 router.get('/geo', async (req, res) => {
 
     let ip = req.socket.remoteAddress;
-    console.log(ip);
+    //console.log(ip);
     if (ip == "::1" || ip.includes("::ffff")) {
         ip = "24.212.248.248";
     }

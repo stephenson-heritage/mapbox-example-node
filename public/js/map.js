@@ -7,7 +7,7 @@ var map = new mapboxgl.Map({
 });
 
 let getHydrants = async () => {
-    let req = await fetch("/api/hydrants");
+    let req = await fetch("/api/hydrantsx");
     let data = await req.text();
     let parsed = new window.DOMParser().parseFromString(data, 'text/xml');
 
